@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Samal Zhexemaliyeva](https://up.htmlacademy.ru/php/9/user/909077).
-* Наставник: `Сергей Шершнев`.
+* Наставник: [Сергей Шершнев](https://htmlacademy.ru/profile/shv_sergey).
 
 ---
 
