@@ -40,6 +40,15 @@ $items = [
         'url' => 'img/lot-6.jpg'
     ],
 ];
+function format_price($number) {
+    if ($number < 1000) {
+        $output = $number;
+    }
+    else {
+        $output = number_format($number , 0, '' , ' ');
+    }
+    return $output . ' ' . '<b class="rub">р</b>';   
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -102,7 +111,7 @@ $items = [
             <h2>Открытые лоты</h2>
         </div>
         <ul class="lots__list">
-        <?php foreach ($items as $key => $val): ?>
+        <?php foreach ($items as $val): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="<?=$val['url']; ?>" width="350" height="260" alt="">
@@ -113,7 +122,7 @@ $items = [
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=$val['price']; ?><b class="rub">р</b></span>
+                            <span class="lot__cost"><?=format_price($val['price']); ?></span>
                         </div>
                         <div class="lot__timer timer">
                             12:23
