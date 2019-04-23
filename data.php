@@ -40,4 +40,5 @@ $items = [
         'url' => 'img/lot-6.jpg'
     ],
 ];
-?>
+$deadline = strtotime('tomorrow');
+$sec_in_hour = 3600;
