@@ -40,5 +40,6 @@ $items = [
         'url' => 'img/lot-6.jpg'
     ],
 ];
+date_default_timezone_set('Europe/Moscow');
 $deadline = strtotime('tomorrow');
 $sec_in_hour = 3600;

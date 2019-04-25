@@ -14,15 +14,17 @@ function esc($string) {
 }
 
 function get_time_diff($date) {
-    $time_diff_sec = $date - strtotime('now');
-    return $time_diff_sec;
+    return $date - time();
 }
 
-function show_breakpoint($time) {
-    if ($time <= $sec_in_hour) {
-        return true;
-    } else {
-        return false;
-    }
+function format_time_diff($date) {
+    $time_diff = get_time_diff($date);
+    $hours = floor($time_diff / 3600);
+    $minutes = floor(($time_diff % 3600) / 60);
+    return $hours . ':' . $minutes;
+}
+
+function show_breakpoint($time, $sec) {
+    return $time <= $sec;
 }
 
