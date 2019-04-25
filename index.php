@@ -5,13 +5,15 @@ require_once('data.php');
 
 $page_content = include_template('index.php', [
     'categories' => $categories, 
-    'items' => $items
+    'items' => $items,
+    'deadline' => $deadline,
+    'secs_in_hour' => $secs_in_hour
 ]);
 $layout_content = include_template('layout.php', [
-    'content' => $page_content, 'categories' => $categories, 
+    'content' => $page_content, 
+    'categories' => $categories, 
     'is_auth' => $is_auth, 
     'user_name' => $user_name, 
-    'title' => 'Главная']
-);
+    'title' => 'Главная'
+]);
 print($layout_content);
-?>
