@@ -21,10 +21,17 @@ function format_time_diff($date) {
     $time_diff = get_time_diff($date);
     $hours = floor($time_diff / 3600);
     $minutes = floor(($time_diff % 3600) / 60);
+    if($hours < 10) {
+        $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
+    }
+    if($minutes < 10) {
+        $minutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
+    }
     return $hours . ':' . $minutes;
 }
 
-function show_breakpoint($time, $sec) {
+function show_breakpoint($date, $sec) {
+    $time = get_time_diff($date);
     return $time <= $sec;
 }
 

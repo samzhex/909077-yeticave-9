@@ -42,4 +42,4 @@ $items = [
 ];
 date_default_timezone_set('Europe/Moscow');
 $deadline = strtotime('tomorrow');
-$sec_in_hour = 3600;
+$secs_in_hour = 3600;
