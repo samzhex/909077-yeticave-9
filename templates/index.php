@@ -27,7 +27,7 @@
                         <span class="lot__amount">Стартовая цена</span>
                         <span class="lot__cost"><?=format_price(esc($val['price'])); ?></span>
                     </div>
-                    <div class="lot__timer timer <?= show_breakpoint(get_time_diff($deadline), $secs_in_hour) ? 'timer--finishing' : '' ?>">
+                    <div class="lot__timer timer <?= show_breakpoint($deadline, $secs_in_hour) ? 'timer--finishing' : '' ?>">
                         <?=format_time_diff($deadline); ?>
                     </div>
                 </div>
