@@ -17,7 +17,8 @@ function get_time_diff($date) {
     return $date - time();
 }
 
-function format_time_diff($date) {
+function format_time_diff($deadline) {
+    $date = strtotime($deadline);
     $time_diff = get_time_diff($date);
     $hours = floor($time_diff / 3600);
     $minutes = floor(($time_diff % 3600) / 60);
@@ -30,7 +31,8 @@ function format_time_diff($date) {
     return $hours . ':' . $minutes;
 }
 
-function show_breakpoint($date, $sec) {
+function show_breakpoint($deadline, $sec) {
+    $date = strtotime($deadline);
     $time = get_time_diff($date);
     return $time <= $sec;
 }
