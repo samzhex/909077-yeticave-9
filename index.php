@@ -5,19 +5,26 @@ require_once('data.php');
 
 $link = mysqli_connect('localhost:8889', 'root', 'root', 'yeticave');
 
-mysqli_set_charset($link, "utf8");
+if (!$link) {
+    print('Ошибка MySQL: ' . mysqli_error($link));
+    die();
+} else {
+    mysqli_set_charset($link, "utf8");
+}
 
 $sql = 'SELECT * FROM categories';
 
-$categories = mysqli_query($link, $sql);
+$result = mysqli_query($link, $sql);
+$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$sql = 'SELECT l.title, picture, price, dt_end, c.title AS category  FROM lots l LEFT JOIN categories c ON l.category_id = c.id ORDER BY l.dt_add DESC';
+$sql = 'SELECT l.id AS id, l.title, picture, price, dt_end, c.title AS category  FROM lots AS l LEFT JOIN categories AS c ON l.category_id = c.id ORDER BY l.dt_add DESC';
 $items = mysqli_query($link, $sql);
 
 $page_content = include_template('index.php', [
     'categories' => $categories, 
     'items' => $items,
-    'secs_in_hour' => $secs_in_hour
+    'secs_in_hour' => $secs_in_hour,
+
 ]);
 $layout_content = include_template('layout.php', [
     'content' => $page_content, 
