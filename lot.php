@@ -3,33 +3,49 @@ require_once('helpers.php');
 require_once('functions.php');
 require_once('data.php');
 
-if(isset($_GET['id'])){
-    $lot_id = $_GET['id'];
-}   else {
+if(!isset($_GET['id'])){
     http_response_code(404);
+    die();
 }
 
+$lot_id = $_GET['id'];
+
 $link = mysqli_connect('localhost:8889', 'root', 'root', 'yeticave');
+
+if (!$link) {
+    print('Ошибка MySQL: ' . mysqli_error($link));
+    die();
+} else {
+    mysqli_set_charset($link, "utf8");
+}
 
 mysqli_set_charset($link, "utf8");
 
 $sql = 'SELECT * FROM categories';
-$categories = mysqli_query($link, $sql);
-
-$sql = 'SELECT l.id, l.title, description, picture, price, dt_end, step, c.title AS category  FROM lots l LEFT JOIN categories c ON l.category_id = c.id';
 $result = mysqli_query($link, $sql);
-$lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+if (!$result) {
+    print("Ошибка в запросе к БД. Запрос: $sql " . mysqli_error($link));
+    die();
+}
+$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$lot = $lots[$lot_id-1];
+$sql = 'SELECT l.id, l.title, description, picture, price, dt_end, step, c.title AS category  FROM lots AS l LEFT JOIN categories AS c ON l.category_id = c.id WHERE l.id = ' . $lot_id;
+$result = mysqli_query($link, $sql);
+if (!$result) {
+    print("Ошибка в запросе к БД. Запрос: $sql " . mysqli_error($link));
+    die();
+}
+$lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$lot = $lots[0];
+
+if(!$lot){
+    http_response_code(404);
+    die();
+}
 
 $lot_content = include_template('lot.php', [
-    'lot_title' => $lot['title'], 
-    'category' => $lot['category'], 
-    'description' => $lot['description'], 
-    'picture' => $lot['picture'], 
-    'price' => $lot['price'],
-    'dt_end' => $lot['dt_end'],
-    'step' => $lot['step']
+    'lot' => $lot, 
+    'secs_in_hour' => $secs_in_hour
 ]);
 
 $layout_content = include_template('layout.php', [
@@ -37,7 +53,6 @@ $layout_content = include_template('layout.php', [
     'categories' => $categories, 
     'is_auth' => $is_auth, 
     'user_name' => $user_name, 
-    'title' => $lot_title
 ]);
 print($layout_content);
 
