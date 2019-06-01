@@ -37,3 +37,10 @@ function show_breakpoint($deadline, $sec) {
     return $time <= $sec;
 }
 
+function check_date($dt_end) {
+    $date = strtotime($dt_end);
+    $now = time();
+    $diff = $date - $now;
+    return $diff <= 86400;
+} 
+
