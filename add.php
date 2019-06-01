@@ -26,31 +26,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $required = ['lot-name', 'message'];
     $errors = [];
     foreach ($required as $key) {
-        if (empty($_POST[$key])) {
+        if (empty(trim($lot[$key]))) {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
     
-    if ($lot['category'] === 'select') {
+    if ($lot['category'] === 'Выберите категорию') {
         $errors['category'] = 'Выберите категорию';
     }
     
     if (isset($_FILES['lot-img'])) {
         $file_name = $_FILES['lot-img']['name'];
-        $tmp_name = $_FILES['lot-img']['tmp_name'];
         $file_path = __DIR__ . '/uploads/';
         $file_url = '/uploads/' . $file_name;
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-        if ($file_type !== 'image/jpeg') {
-            $errors['lot-img'] = 'Загрузите картинку в формате PNG, JPEG или JPG';
-        } else {
+        $file_types = ['image/jpeg', 'image/png'];
+        if (in_array($_FILES['lot-img']['type'], $file_types)) {
             $lot['lot-img'] = $file_url;
+        } else {
+            $errors['lot-img'] = 'Загрузите картинку в формате PNG, JPEG или JPG';
         }
     } else {
         $errors['lot-img'] = 'Вы не загрузили файл';
     }
-    if (isset($lot['lot-rate'])) {
+
+    if (!empty($lot['lot-rate'])) {
         if ($lot['lot-rate'] <= 0) {
             $errors['lot-rate'] = 'Содержимое поля «начальная цена» должно быть числом больше нуля';
         }
@@ -58,15 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['lot-rate'] = 'Это поле надо заполнить';
     }
 
-    if (isset($lot['lot-date'])){
-        if (!is_date_valid($lot['lot-date'])) {
+    if (!empty($lot['lot-date'])){
+        if (!is_date_valid($lot['lot-date']) || check_date($lot['lot-date'])) {
             $errors['lot-date'] = 'Указанная дата должна быть больше текущей даты, хотя бы на один день и в формате «ГГГГ-ММ-ДД»';
         }
     } else {
         $errors['lot-date'] = 'Это поле надо заполнить';
     }
     
-    if (isset($lot['lot-step'])) {
+    if (!empty ($lot['lot-step'])) {
         if ($lot['lot-step'] <= 0) {
             $errors['lot-step'] = 'Содержимое поля «шаг ставки» должно быть целым числом больше ноля';
         }
@@ -78,12 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $page_content = include_template('add.php', [
             'lot' => $lot,
             'errors' => $errors,
+            'error' => 'Пожалуйста, исправьте ошибки в форме.',
             'categories' => $categories
         ]);
     } else {
         move_uploaded_file($_FILES['lot-img']['tmp_name'], $file_path . $file_name);
         $sql = 'INSERT INTO lots (dt_add, user_id, category_id, title, description, picture, price, dt_end, step) VALUES (NOW(), 1, ?, ?, ?, ?, ?, ?, ?)';
-
         $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot-img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step']]);
         $res = mysqli_stmt_execute($stmt);
         if($res) {
@@ -92,7 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $page_content = include_template('lot.php', [
                 'lot' => $lot,
             ]);
-            
+            die();
+        } else {
+            $page_content = include_template('add.php', [
+                'lot' => $lot,
+                'errors' => $errors,
+                'error' => 'Что-то пошло не так.',
+                'categories' => $categories
+            ]);
         }
     }
 
