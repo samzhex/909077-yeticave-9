@@ -38,7 +38,7 @@ CREATE TABLE users (
     dt_create DATETIME DEFAULT CURRENT_TIMESTAMP,
     email CHAR(128) UNIQUE,
     name CHAR(50),
-    password CHAR(50),
+    password CHAR(255),
     avatar CHAR(255),
     contacts CHAR(255)
 );
