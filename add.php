@@ -2,33 +2,28 @@
 require_once('helpers.php');
 require_once('functions.php');
 require_once('data.php');
-
-$link = mysqli_connect('localhost:8889', 'root', 'root', 'yeticave');
-
-if (!$link) {
-    print('Ошибка MySQL: ' . mysqli_error($link));
-    die();
-} 
-mysqli_set_charset($link, "utf8");
+require_once('init.php');
 
 $sql = 'SELECT * FROM categories';
 
 $result = mysqli_query($link, $sql);
-if (!$result) {
-    print("Ошибка в запросе к БД. Запрос: $sql " . mysqli_error($link));
-    die();
-}
-
+check_result($result, $link, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
-    $required = ['lot-name', 'message'];
+    $required = ['title', 'description'];
     $errors = [];
+    
     foreach ($required as $key) {
         if (empty(trim($lot[$key]))) {
             $errors[$key] = 'Это поле надо заполнить';
         }
+        if (check_length($key, $lot, $link)) {
+            $errors[$key] = 'Превышено количество символов';
+            
+        };
     }
     
     if ($lot['category'] === 'Выберите категорию') {
@@ -83,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         move_uploaded_file($_FILES['lot-img']['tmp_name'], $file_path . $file_name);
         $sql = 'INSERT INTO lots (dt_add, user_id, category_id, title, description, picture, price, dt_end, step) VALUES (NOW(), 1, ?, ?, ?, ?, ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot-img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step']]);
+        $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['title'], $lot['description'], $lot['lot-img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step']]);
         $res = mysqli_stmt_execute($stmt);
         if($res) {
             $lot_id = mysqli_insert_id($link);
