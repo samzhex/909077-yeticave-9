@@ -11,7 +11,7 @@ check_result($result, $link, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lot = $_POST;
     $required = ['title', 'description'];
     $errors = [];
