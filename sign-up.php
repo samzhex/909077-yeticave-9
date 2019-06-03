@@ -1,24 +1,13 @@
 <?php
 require_once('helpers.php');
 require_once('functions.php');
-require_once('data.php');
 require_once('init.php');
 
 $tpl_data = [];
 
-$link = mysqli_connect('localhost:8889', 'root', 'root', 'yeticave');
-
-if (!$link) {
-    print('Ошибка MySQL: ' . mysqli_error($link));
-    die();
-} 
-mysqli_set_charset($link, "utf8");
-
 $sql = 'SELECT * FROM categories';
-
 $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
-
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -53,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             check_result($res, $link, $sql);
         }
         if ($res && empty($errors)) {
-            header('Location: /pages/login.html');
+            header('Location: /login.php');
             exit();
         }
     }
