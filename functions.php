@@ -52,14 +52,3 @@ function check_result($res, $link, $sql) {
     }
 }
 
-function check_length($key, $item, $link) {
-    $sql = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'lots' AND COLUMN_NAME = '$key'";
-    $result = mysqli_query($link, $sql);
-    check_result($result, $link, $sql);
-    $char = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    $limit = substr($char['COLUMN_TYPE'], 5, -1);
-    if (strlen(trim($item[$key])) > $limit) {
-        return true;
-    }
-}
-

@@ -8,17 +8,17 @@ $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$sql = 'SELECT l.id AS id, l.title, picture, price, dt_end, c.title AS category  FROM lots AS l LEFT JOIN categories AS c ON l.category_id = c.id ORDER BY l.dt_add DESC';
-$result = mysqli_query($link, $sql);
-check_result($result, $link, $sql);
-$items = mysqli_fetch_all($result, MYSQLI_ASSOC);
+if (isset($_SESSION['user'])) {
+    header ('Location: /');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form = $_POST;
     $required = ['email', 'password'];
     $errors = [];
     foreach($required as $field) {
-        if(empty($form[$field])) {
+        if(empty(trim($form[$field]))) {
             $errors[$field] = 'Это поле надо заполнить';
         }   
     }
@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($form['password'], $user['password'])) {
             $_SESSION['user'] = $user;
         } else {
-			$errors['password'] = 'Неверный пароль';
+			$errors['err'] = 'Неверное имя пользователя или пароль';
 		}
     } else {
-		$errors['email'] = 'Такой пользователь не найден';
+		$errors['err'] = 'Неверное имя пользователя или пароль';
     }
     if (count($errors)) {
 		$page_content = include_template('login.php', [
@@ -47,16 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
 	}
 } else {
-    if (isset($_SESSION['user'])) {
-        header ('Location: /');
-    }
-    else {
-        $page_content = include_template('login.php', []);
-    }
+    $page_content = include_template('login.php', []);
 }
 
-
-$page_content = include_template('login.php', []);
 $layout_content = include_template('layout.php', [
     'content' => $page_content, 
     'categories' => $categories, 
