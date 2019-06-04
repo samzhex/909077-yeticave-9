@@ -8,7 +8,7 @@
         <p class="lot-item__category">Категория: <span><?=esc($lot['category']);?></span></p>
         <p class="lot-item__description"><?=esc($lot['description']);?></p>
     </div>
-    <div class="lot-item__right">
+    <div class="lot-item__right <?=(!isset($_SESSION['user'])) ? "visually-hidden" : "";?>">
         <div class="lot-item__state">
         <div class="lot-item__timer timer <?=show_breakpoint($lot['dt_end'], $secs_in_hour) ? 'timer--finishing' : '' ?>">
             <?=format_time_diff($lot['dt_end']); ?>

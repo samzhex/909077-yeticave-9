@@ -1,37 +1,31 @@
 <?php
 require_once('helpers.php');
 require_once('functions.php');
-require_once('data.php');
 require_once('init.php');
 
 $tpl_data = [];
 
-$link = mysqli_connect('localhost:8889', 'root', 'root', 'yeticave');
-
-if (!$link) {
-    print('Ошибка MySQL: ' . mysqli_error($link));
-    die();
-} 
-mysqli_set_charset($link, "utf8");
-
 $sql = 'SELECT * FROM categories';
-
 $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
-
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form = $_POST;
-    $required = ['password', 'name', 'contacts'];
+    $required = ['email', 'password', 'name', 'contacts'];
     $errors = [];
     foreach ($required as $field) {
         if (empty(trim($form[$field]))) {
             $errors[$field] = 'Не заполнено поле';
         }
-        if (check_length($field, $form, $link)) {
+        if ($field === 'name' || $field === 'email') {
+            $limit = 50;
+        } else {
+            $limit = 200;
+        }
+        if (strlen(trim($form[$field])) > $limit) {
             $errors[$field] = 'Превышено количество символов';
-        };
+        }
     }
 
     if (!filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
@@ -53,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             check_result($res, $link, $sql);
         }
         if ($res && empty($errors)) {
-            header('Location: /pages/login.html');
+            header('Location: /login.php');
             exit();
         }
     }
@@ -64,7 +58,6 @@ $page_content = include_template('sign-up.php', $tpl_data);
 $layout_content = include_template('layout.php', [
     'content' => $page_content, 
     'categories' => $categories, 
-    'is_auth' => $is_auth, 
     'user_name' => $user_name, 
     'title' => 'Регистрация'
 ]);

@@ -1,11 +1,14 @@
 <?php
 require_once('helpers.php');
 require_once('functions.php');
-require_once('data.php');
 require_once('init.php');
 
-$sql = 'SELECT * FROM categories';
+if(!isset($_SESSION['user'])) {
+    http_response_code(403);
+    die();
+}
 
+$sql = 'SELECT * FROM categories';
 $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -106,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $layout_content = include_template('layout.php', [
     'content' => $page_content, 
     'categories' => $categories, 
-    'is_auth' => $is_auth, 
     'user_name' => $user_name, 
     'title' => 'Добавление лота'
 ]);
+
 print($layout_content);
