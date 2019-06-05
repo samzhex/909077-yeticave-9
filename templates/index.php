@@ -25,7 +25,7 @@
                 <div class="lot__state">
                     <div class="lot__rate">
                         <span class="lot__amount">Стартовая цена</span>
-                        <span class="lot__cost"><?=format_price(esc($val['price'])); ?></span>
+                        <span class="lot__cost"><?=format_price(esc($val['price'])); ?><b class="rub">р</b></span>
                     </div>
                     <div class="lot__timer timer <?=show_breakpoint($val['dt_end'], $secs_in_hour) ? 'timer--finishing' : '' ?>">
                         <?=format_time_diff($val['dt_end']); ?>
