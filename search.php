@@ -14,8 +14,6 @@ if ($search) {
     $result = mysqli_stmt_get_result($stmt);
     $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
-var_dump($search);
-var_dump($lots);
 
 $lot_content = include_template('search.php', [
     'lots' => $lots ?? null,
