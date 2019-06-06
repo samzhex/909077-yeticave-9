@@ -8,12 +8,6 @@ if(!isset($_SESSION['user'])) {
     die();
 }
 
-$sql = 'SELECT * FROM categories';
-$result = mysqli_query($link, $sql);
-check_result($result, $link, $sql);
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lot = $_POST;
     $required = ['title', 'description'];

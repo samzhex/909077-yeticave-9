@@ -1,4 +1,5 @@
 <?php
+// require_once('helpers.php');
 
 function format_price($number) {
     if ($number < 1000) {
@@ -7,7 +8,7 @@ function format_price($number) {
     else {
         $output = number_format($number , 0, '' , ' ');
     }
-    return $output . '<b class="rub">р</b>';   
+    return $output;   
 }
 
 function esc($string) {
@@ -52,3 +53,13 @@ function check_result($res, $link, $sql) {
     }
 }
 
+function remaining_time($date, $hour, $day) {
+    $remaining_time = time() - strtotime($date);
+    if ($remaining_time < $hour) {
+        return intval($remaining_time/60) . ' ' . get_noun_plural_form($remaining_time/60, 'минута назад', 'минуты назад', 'минут назад');
+    } else if ($remaining_time < $day) {
+        return intval($remaining_time/3600) . ' ' . get_noun_plural_form($remaining_time/3600, 'час назад', 'часа назад', 'часов назад');
+    } else {
+        return date('d.m.y', strtotime($date)) . ' в ' . date('H:i', strtotime($date)); 
+    }
+}

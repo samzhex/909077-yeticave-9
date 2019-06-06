@@ -3,11 +3,6 @@ require_once('helpers.php');
 require_once('functions.php');
 require_once('init.php');
 
-$sql = 'SELECT * FROM categories';
-$result = mysqli_query($link, $sql);
-check_result($result, $link, $sql);
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
 if (isset($_SESSION['user'])) {
     header ('Location: /');
     exit();
@@ -37,15 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
 		$errors['err'] = 'Неверное имя пользователя или пароль';
     }
-    if (count($errors)) {
-		$page_content = include_template('login.php', [
-            'form' => $form, 
-            'errors' => $errors
-        ]);
-    } else {
+    if (count($errors) === 0) {
         header('Location: /login.php');
         exit();
-	}
+    }
+    
+    $page_content = include_template('login.php', [
+        'form' => $form, 
+        'errors' => $errors
+    ]);
 } else {
     $page_content = include_template('login.php', []);
 }
