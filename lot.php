@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty(trim($my_bet['cost']))) {
         $error = 'Введите ставку';
     }
-    if ($my_bet['cost'] < ($lot['min_bet'])) {
+    if (empty($error) && $my_bet['cost'] < $lot['min_bet']) {
         $error = 'Мин. ставка ' . $lot['min_bet'] . ' р';
     }
     if (empty($error)) {
@@ -45,21 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
     }
-    $lot_content = include_template('lot.php', [
-        'lot' => $lot, 
-        'secs_in_hour' => $secs_in_hour,
-        'bets' => $bets,
-        'error' => $error
-    ]);
+} 
 
-} else {
-    $lot_content = include_template('lot.php', [
-        'lot' => $lot, 
-        'secs_in_hour' => $secs_in_hour,
-        'bets' => $bets,
-    ]);  
-    
-}
+$lot_content = include_template('lot.php', [
+    'lot' => $lot, 
+    'bets' => $bets,
+    'error' => $error ?? null
+]);  
 
 $layout_content = include_template('layout.php', [
     'content' => $lot_content,  

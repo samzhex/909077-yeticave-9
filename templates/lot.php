@@ -26,7 +26,9 @@
             <p class="lot-item__form-item form__item <?=isset($error) ? "form__item--invalid" : "";  ?>">
             <label for="cost">Ваша ставка</label>
             <input id="cost" type="text" name="cost" placeholder="12 000" value="<?=esc($my_bet['cost'] ?? ""); ?>">
-            <span class="form__error"><?=$error;?></span>
+            <?php if (isset($error)) : ?>
+                <span class="form__error"><?=$error;?></span>
+            <?php endif;?>
             </p>
             <button type="submit" class="button">Сделать ставку</button>
         </form>
@@ -38,7 +40,7 @@
                 <tr class="history__item">
                 <td class="history__name"><?=esc($bet['name']);?></td>
                 <td class="history__price"><?=format_price(esc($bet['price']));?> р</td>
-                <td class="history__time"><?=$time=remaining_time($bet['dt_bet'], $secs_in_hour, 86400);?></td>
+                <td class="history__time"><?=$time=remaining_time($bet['dt_bet']);?></td>
                 </tr>
             <?php endforeach;?>
         </table>
