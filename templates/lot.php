@@ -16,7 +16,7 @@
         <div class="lot-item__cost-state">
             <div class="lot-item__rate">
             <span class="lot-item__amount">Текущая цена</span>
-            <span class="lot-item__cost"><?=esc($lot['bid_price']);?></span>
+            <span class="lot-item__cost"><?=isset($lot['bid_price']) ? esc($lot['bid_price']) : esc($lot['price']);?></span>
             </div>
             <div class="lot-item__min-cost">
             Мин. ставка <span><?=esc($lot['min_bet']);?> р</span>

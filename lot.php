@@ -14,7 +14,12 @@ $sql = 'SELECT l.id, l.title, description, picture, price, dt_end, step, (SELECT
 $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
 $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
-$lot['min_bet'] = $lot['step'] + $lot['bid_price'];
+
+if(isset($lot['bid_price'])) {
+    $lot['min_bet'] = $lot['step'] + $lot['bid_price'];
+} else {
+    $lot['min_bet'] = $lot['step'] + $lot['price'];
+}
 
 if(!$lot){
     http_response_code(404);
