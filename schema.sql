@@ -43,4 +43,4 @@ CREATE TABLE users (
     contacts CHAR(255)
 );
 
-CREATE FULLTEXT INDEX ft_search ON gifs(title, description)
+CREATE FULLTEXT INDEX ft_search ON lots(title, description)

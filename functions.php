@@ -23,8 +23,8 @@ function format_time_diff($deadline) {
     $date = strtotime($deadline);
     $time_diff = get_time_diff($date);
     $hours = floor($time_diff / 3600);
-    $minutes = floor(($time_diff % 3600) / 60);
-    if($hours < 10) {
+    $minutes = abs(floor(($time_diff % 3600) / 60));
+    if(abs($hours) < 10) {
         $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
     }
     if($minutes < 10) {
