@@ -42,3 +42,5 @@ CREATE TABLE users (
     avatar CHAR(255),
     contacts CHAR(255)
 );
+
+CREATE FULLTEXT INDEX ft_search ON lots(title, description)

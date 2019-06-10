@@ -23,8 +23,8 @@ function format_time_diff($deadline) {
     $date = strtotime($deadline);
     $time_diff = get_time_diff($date);
     $hours = floor($time_diff / 3600);
-    $minutes = floor(($time_diff % 3600) / 60);
-    if($hours < 10) {
+    $minutes = abs(floor(($time_diff % 3600) / 60));
+    if(abs($hours) < 10) {
         $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
     }
     if($minutes < 10) {
@@ -53,11 +53,11 @@ function check_result($res, $link, $sql) {
     }
 }
 
-function remaining_time($date, $hour, $day) {
+function remaining_time($date) {
     $remaining_time = time() - strtotime($date);
-    if ($remaining_time < $hour) {
+    if ($remaining_time < 3600) {
         return intval($remaining_time/60) . ' ' . get_noun_plural_form($remaining_time/60, 'минута назад', 'минуты назад', 'минут назад');
-    } else if ($remaining_time < $day) {
+    } else if ($remaining_time < 86400) {
         return intval($remaining_time/3600) . ' ' . get_noun_plural_form($remaining_time/3600, 'час назад', 'часа назад', 'часов назад');
     } else {
         return date('d.m.y', strtotime($date)) . ' в ' . date('H:i', strtotime($date)); 
