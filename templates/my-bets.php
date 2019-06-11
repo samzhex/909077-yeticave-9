@@ -2,7 +2,7 @@
       <h2>Мои ставки</h2>
       <table class="rates__list">
         <?php foreach($my_bets as $bet) : ?>
-        <tr class="rates__item">
+        <tr class="rates__item <?=$bet['winner_id'] === $_SESSION['user']['id'] ? 'rates__item--win' : '';?>">
           <td class="rates__info">
             <div class="rates__img">
               <img src="../<?=$bet['picture'];?>" width="54" height="40" alt="Сноуборд">
@@ -13,7 +13,7 @@
             <?=$bet['category'];?>
           </td>
           <td class="rates__timer">
-            <div class="timer <?=show_breakpoint($bet['dt_end'], $secs_in_hour) ? 'timer--finishing' : '' ?>"><?=format_time_diff($bet['dt_end']); ?></div>
+            <div class="timer <?= $bet['winner_id'] === $_SESSION['user']['id'] ? 'timer--win' : ($bet['winner_id'] !== $_SESSION['user']['id'] && show_breakpoint($bet['dt_end'], $secs_in_hour) ? 'timer--finishing'  : '' );?>"><?=($bet['winner_id'] === $_SESSION['user']['id']) ? 'Ставка выиграла' : format_time_diff($bet['dt_end']); ?></div>
           </td>
           <td class="rates__price">
             <?=$bet['price'];?>

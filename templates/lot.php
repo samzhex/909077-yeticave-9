@@ -22,7 +22,7 @@
             Мин. ставка <span><?=esc($lot['min_bet']);?> р</span>
             </div>
         </div>
-        <form class="lot-item__form" action="lot.php?id=<?=$lot['id']; ?>" method="post" autocomplete="off">
+        <form class="lot-item__form <?=(strtotime($lot['dt_end']) < time() || $lot['user_id'] === $_SESSION['user']['id'] || $_SESSION['user']['id'] === $bets[0]['user_id']) ? "visually-hidden" : "";?> "action="lot.php?id=<?=$lot['id']; ?>" method="post" autocomplete="off">
             <p class="lot-item__form-item form__item <?=isset($error) ? "form__item--invalid" : "";  ?>">
             <label for="cost">Ваша ставка</label>
             <input id="cost" type="text" name="cost" placeholder="12 000" value="<?=esc($my_bet['cost'] ?? ""); ?>">

@@ -1,0 +1,13 @@
+{
+    "name": "macair/909077-yeticave-9",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Samal Zhex",
+            "email": "samal.zhex@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}

@@ -2,6 +2,7 @@
 require_once('helpers.php');
 require_once('functions.php');
 require_once('init.php');
+require_once('vendor/autoload.php');
 
 if(!isset($_GET['id'])){
     http_response_code(404);
@@ -10,7 +11,7 @@ if(!isset($_GET['id'])){
 
 $lot_id = $_GET['id'];
 
-$sql = 'SELECT l.id, l.title, description, picture, price, dt_end, step, (SELECT MAX(price) FROM bets WHERE lot_id = l.id) AS bid_price, c.title AS category  FROM lots AS l LEFT JOIN categories AS c ON l.category_id = c.id WHERE l.id = ' . $lot_id;
+$sql = 'SELECT l.id, l.title, description, picture, price, dt_end, step, (SELECT MAX(price) FROM bets WHERE lot_id = l.id) AS bid_price, user_id, c.title AS category  FROM lots AS l LEFT JOIN categories AS c ON l.category_id = c.id WHERE l.id = ' . $lot_id;
 $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
 $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -26,7 +27,7 @@ if(!$lot){
     die();
 }
 
-$sql = "SELECT dt_bet, b.price, u.name AS name FROM bets AS b LEFT JOIN users AS u ON b.user_id = u.id WHERE b.lot_id = $lot_id ORDER BY price DESC";
+$sql = "SELECT dt_bet, b.price, b.user_id AS user_id, u.name AS name FROM bets AS b LEFT JOIN users AS u ON b.user_id = u.id WHERE b.lot_id = $lot_id ORDER BY price DESC";
 $result = $result = mysqli_query($link, $sql);
 check_result($result, $link, $sql);
 $bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -55,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $lot_content = include_template('lot.php', [
     'lot' => $lot, 
     'bets' => $bets,
-    'error' => $error ?? null
+    'error' => $error ?? null,
+    'secs_in_hour' => $secs_in_hour
 ]);  
 
 $layout_content = include_template('layout.php', [
