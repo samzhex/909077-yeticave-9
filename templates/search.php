@@ -2,7 +2,7 @@
   <ul class="nav__list container">
     <?php foreach($categories as $category) : ?>
       <li class="nav__item">
-        <a href="all-lots.html"><?=$category['title']?></a>
+        <a href="all-lots.php?category_id=<?=$category['id'];?>"><?=$category['title']?></a>
       </li>
     <?php endforeach;?>
   </ul>
@@ -22,7 +22,7 @@
           <h3 class="lot__title"><a class="text-link" href="lot.php?id=<?=$lot['id'];?>"><?=esc($lot['title']);?></a></h3>
           <div class="lot__state">
             <div class="lot__rate">
-            <?php if ($lot['bets_count'] === 0) : ?>
+            <?php if (intval($lot['bets_count']) === 0) : ?>
               <span class="lot__amount">Стартовая цена</span>
               <span class="lot__cost"><?=esc($lot['price']);?><b class="rub">р</b></span>
             <?php else : ?>
