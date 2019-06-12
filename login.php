@@ -19,8 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }   
     }
     $email = mysqli_real_escape_string($link, $form['email']);
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $res = mysqli_query($link, $sql);
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = db_get_prepare_stmt($link, $sql, [$email]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
     check_result($res, $link, $sql);
     $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
     
@@ -50,7 +52,8 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content, 
     'categories' => $categories, 
     'user_name' => $user_name, 
-    'title' => 'Вход'
+    'title' => 'Вход',
+    'search' => $search ?? null
 ]);
 print($layout_content);
 

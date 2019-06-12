@@ -46,7 +46,7 @@
   <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev"><a href="<?=($cur_page > 1) ? "search.php?search=" . esc($search) . "&page=" . ($cur_page - 1) : "#" ; ?>">Назад</a></li>
     <?php foreach($pages as $page) : ?>
-    <li class="pagination-item <?=($page == $cur_page) ? "pagination-item-active" : "";?>"><a href="search.php?search=<?=esc($search) . '&page=' . $page;?>"><?=$page;?></a></li>
+    <li class="pagination-item <?=(intval($page) === $cur_page) ? "pagination-item-active" : "";?>"><a href="search.php?search=<?=esc($search) . '&page=' . $page;?>"><?=$page;?></a></li>
   <?php endforeach;?>
     <li class="pagination-item pagination-item-next"><a href="<?=($cur_page < count($pages)) ? "search.php?search=" . esc($search) . "&page=" . ($cur_page + 1) : "#" ; ?>">Вперед</a></li>
   </ul>

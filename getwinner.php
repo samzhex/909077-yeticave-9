@@ -6,11 +6,13 @@ require_once('vendor/autoload.php');
 
 $lots = [];
 
-$sql = "SELECT l.title, l.id, (SELECT MAX(price) FROM bets AS b WHERE lot_id = l.id) AS bet_price, (SELECT user_id FROM bets WHERE price = bet_price) AS win_id, (SELECT name FROM users AS u WHERE u.id = win_id) AS winner_name, (SELECT email FROM users AS u WHERE u.id = win_id) AS winner_email FROM lots AS l WHERE dt_end < NOW() AND l.id IN (SELECT DISTINCT b.lot_id FROM bets b)";
+$sql = "SELECT l.title, l.id, (SELECT MAX(price) FROM bets AS b WHERE lot_id = l.id) AS bet_price, (SELECT user_id FROM bets WHERE price = bet_price LIMIT 1) AS win_id, (SELECT name FROM users AS u WHERE u.id = win_id) AS winner_name, (SELECT email FROM users AS u WHERE u.id = win_id) AS winner_email FROM lots AS l WHERE dt_end < NOW() AND l.id IN (SELECT DISTINCT lot_id FROM bets)";
 $stmt = db_get_prepare_stmt($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
+var_dump($stmt);
 check_result($result, $link, $sql);
+
 $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 if ($lots) {
@@ -37,8 +39,9 @@ if ($lots) {
     
         if ($result) {
             print('Рассылка успешно отправлена');
-            $sql = "UPDATE lots SET winner_id = $winner_id WHERE id = $lot_id";
-            $res = mysqli_query($link, $sql);
+            $sql = "UPDATE lots SET winner_id = ? WHERE id = ?";
+            $stmt = db_get_prepare_stmt($link, $sql, [$winner_id, $lot_id]);
+            $res = mysqli_stmt_execute($stmt);
             check_result($res, $link, $sql);
         }
         else {

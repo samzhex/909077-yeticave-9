@@ -18,22 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty(trim($lot[$key]))) {
             $errors[$key] = 'Это поле надо заполнить';
         }
-        if (check_length($key, $lot, $link)) {
+        if (strlen(trim($lot[$key])) > 200) {
             $errors[$key] = 'Превышено количество символов';
-            
-        };
+        }
     }
     
-    if ($lot['category'] === 'Выберите категорию') {
+    if ($lot['category'] > count($categories) || $lot['category'] < 1) {
         $errors['category'] = 'Выберите категорию';
-    }
+    }  
     
-    if (isset($_FILES['lot-img'])) {
+    if (!empty($_FILES['lot-img']['name'])) {
+        $tmp_name = $_FILES['lot-img']['tmp_name'];
         $file_name = $_FILES['lot-img']['name'];
         $file_path = __DIR__ . '/uploads/';
         $file_url = '/uploads/' . $file_name;
         $file_types = ['image/jpeg', 'image/png'];
-        if (in_array($_FILES['lot-img']['type'], $file_types)) {
+        if (in_array(mime_content_type($tmp_name), $file_types)) {
             $lot['lot-img'] = $file_url;
         } else {
             $errors['lot-img'] = 'Загрузите картинку в формате PNG, JPEG или JPG';
@@ -75,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
     } else {
         move_uploaded_file($_FILES['lot-img']['tmp_name'], $file_path . $file_name);
-        $sql = 'INSERT INTO lots (dt_add, user_id, category_id, title, description, picture, price, dt_end, step) VALUES (NOW(), 1, ?, ?, ?, ?, ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['title'], $lot['description'], $lot['lot-img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step']]);
+        $sql = 'INSERT INTO lots (dt_add, user_id, category_id, title, description, picture, price, dt_end, step) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)';
+        $stmt = db_get_prepare_stmt($link, $sql, [$user_id, $lot['category'], $lot['title'], $lot['description'], $lot['lot-img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step']]);
         $res = mysqli_stmt_execute($stmt);
         if($res) {
             $lot_id = mysqli_insert_id($link);
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $page_content = include_template('add.php', [
                 'lot' => $lot,
                 'errors' => $errors,
-                'error' => 'Что-то пошло не так.',
+                'error' => 'Что-то пошло не так.' ?? null,
                 'categories' => $categories
             ]);
         }
@@ -98,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     $page_content = include_template('add.php', [
         'categories' => $categories, 
+        'error' => 'Что-то пошло не так.' ?? null
     ]);
 }
 
@@ -105,7 +106,8 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content, 
     'categories' => $categories, 
     'user_name' => $user_name, 
-    'title' => 'Добавление лота'
+    'title' => 'Добавление лота',
+    'search' => $search ?? null
 ]);
 
 print($layout_content);

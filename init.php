@@ -7,9 +7,10 @@ if (!$link) {
     die();
 } 
 mysqli_set_charset($link, "utf8");
-
 $sql = 'SELECT * FROM categories';
-$result = mysqli_query($link, $sql);
+$stmt = db_get_prepare_stmt($link, $sql, []);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 check_result($result, $link, $sql);
 $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -19,5 +20,8 @@ $user_id = null;
 
 if (isset($_SESSION['user'])) {
     $user_name = $_SESSION['user']['name'];
-    $user_id = $_SESSION['user']['id'];
+    $user_id = intval($_SESSION['user']['id']);
+}
+if (isset($_GET['search'])) {
+    $search = trim($_GET['search']);
 }

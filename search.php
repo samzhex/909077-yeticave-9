@@ -4,8 +4,6 @@ require_once('functions.php');
 require_once('init.php');
 require_once('vendor/autoload.php');
 
-$search = trim($_GET['search']) ?? '';
-
 $lots = [];
 
 if ($search) {
@@ -16,7 +14,7 @@ if ($search) {
     check_result($result, $link, $sql);
     $items = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $cur_page = $_GET['page'] ?? 1;
+    $cur_page = intval($_GET['page'] ?? 1);
     $page_items = 9;
     $items_count = count($items);
     $pages_count = ceil($items_count / $page_items);
@@ -46,7 +44,7 @@ $layout_content = include_template('layout.php', [
     'categories' => $categories, 
     'user_name' => $user_name, 
     'title' => 'Результаты поиска',
-    
+    'search' => $search ?? null
 ]);
 
 print($layout_content);

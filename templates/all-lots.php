@@ -2,7 +2,7 @@
     <ul class="nav__list container">
     <?php foreach($categories as $category) : ?>
         <li class="nav__item <?=($category['id'] === $cur_cat) ? "nav__item--current" : "" ;?>">
-            <a href="all-lots.php?category_id=<?=$category['id']; ?>"><?=$category['title']; ?></a>
+            <a href="all-lots.php?category_id=<?=$category['id']; ?>"><?=esc($category['title']); ?></a>
         </li>
     <?php endforeach; ?>
     </ul>
@@ -17,8 +17,8 @@
                 <img src="../<?=esc($lot['picture']);?>" width="350" height="260" alt="Сноуборд">
             </div>
             <div class="lot__info">
-                <span class="lot__category"><?=$lot['category'];?></span>
-                <h3 class="lot__title"><a class="text-link" href="lot.php?id=<?=$lot['id'];?>"><?=$lot['title'];?></a></h3>
+                <span class="lot__category"><?=esc($lot['category']);?></span>
+                <h3 class="lot__title"><a class="text-link" href="lot.php?id=<?=$lot['id'];?>"><?=esc($lot['title']);?></a></h3>
                 <div class="lot__state">
                 <div class="lot__rate">
                 <?php if ($lot['bets_count'] === 0) : ?>
@@ -42,7 +42,7 @@
     <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev"><a href="<?=($cur_page > 1) ? "all-lots.php?category_id=" . $cur_cat . "&page=" . ($cur_page - 1) : "#" ; ?>">Назад</a></li>
     <?php foreach($pages as $page) : ?>
-        <li class="pagination-item <?=($page == $cur_page) ? "pagination-item-active" : "";?>"><a href="all-lots.php?category_id=<?=($cur_cat) . '&page=' . $page;?>"><?=$page;?></a></li>
+        <li class="pagination-item <?=(intval($page) === intval($cur_page)) ? "pagination-item-active" : "";?>"><a href="all-lots.php?category_id=<?=($cur_cat) . '&page=' . $page;?>"><?=$page;?></a></li>
     <?php endforeach;?>
     <li class="pagination-item pagination-item-next"><a href="<?=($cur_page < count($pages)) ? "all-lots.php?category_id=" . $cur_cat . "&page=" . ($cur_page + 1) : "#" ; ?>">Вперед</a></li>
     </ul>
